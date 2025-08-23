@@ -1,18 +1,25 @@
 package selfprojects.noteapi.Services;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import selfprojects.noteapi.Model.NoteEntity;
+import selfprojects.noteapi.Model.UserEntity;
 import selfprojects.noteapi.Repository.NoteRepository;
+import selfprojects.noteapi.Repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class NotesService {
     private final NoteRepository noteRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public NotesService(NoteRepository noteRepository) {
+    public NotesService(NoteRepository noteRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.noteRepository = noteRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<NoteEntity> getAllNotes() {
@@ -54,6 +61,11 @@ public class NotesService {
             throw new IllegalStateException("Note with this title and content already exists!");
         }
         noteRepository.save(noteEntity);
+    }
+
+    public void createUser(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userRepository.save(userEntity);
     }
 
 }
