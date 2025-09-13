@@ -1,10 +1,9 @@
-package selfprojects.noteapi;
+package selfprojects.postAPI;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import selfprojects.noteapi.Model.UserEntity;
-
+import selfprojects.postAPI.Model.Entity.UserEntity;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,6 +23,11 @@ public class MyUserDetails implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public Long getId() {
+        return userEntity.getId();
+    }
+
+
     @Override
     public String getPassword() {
         return userEntity.getPassword();
@@ -31,7 +35,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return userEntity.getEmail();
     }
 
     @Override

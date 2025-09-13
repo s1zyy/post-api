@@ -1,4 +1,4 @@
-package selfprojects.noteapi.Model;
+package selfprojects.postAPI.Model.Entity;
 
 
 import jakarta.persistence.*;
@@ -11,15 +11,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Table(name = "notes")
+@Table(name = "posts")
 @Entity
 @Data
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class NoteEntity {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +38,14 @@ public class NoteEntity {
     private LocalDateTime updatedAt;
 
 
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id",
+    referencedColumnName = "id")
+    private UserEntity user;
 
+
+    @Transient
+    @OneToMany(mappedBy = "post")
+    private List<ReminderEntity> reminders;
 
 }

@@ -1,0 +1,5 @@
+ALTER TABLE posts
+    ADD user_id BIGINT;
+
+ALTER TABLE posts
+    ADD CONSTRAINT FK_POSTS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);

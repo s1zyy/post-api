@@ -1,4 +1,4 @@
-    package selfprojects.noteapi.Model;
+    package selfprojects.postAPI.Model.Entity;
 
 
     import jakarta.persistence.*;
@@ -13,9 +13,10 @@
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        private String username;
+        private String email;
 
         private String password;
 
         private String role;
+
     }
