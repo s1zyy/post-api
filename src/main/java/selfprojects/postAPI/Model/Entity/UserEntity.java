@@ -1,8 +1,11 @@
     package selfprojects.postAPI.Model.Entity;
 
 
+    import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
     import lombok.Data;
+
+    import java.util.List;
 
     @Table(name = "users")
     @Entity
@@ -18,5 +21,17 @@
         private String password;
 
         private String role;
+
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @JsonManagedReference
+        @OrderBy("id ASC")
+        private List<PostEntity> posts;
+
+//        @Override
+//        public String toString() {
+//            return id.toString();
+//        }
+
+
 
     }

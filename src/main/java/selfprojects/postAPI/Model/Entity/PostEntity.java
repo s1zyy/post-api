@@ -1,17 +1,14 @@
 package selfprojects.postAPI.Model.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Table(name = "posts")
 @Entity
@@ -41,11 +38,18 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id",
     referencedColumnName = "id")
+    @JsonBackReference
     private UserEntity user;
 
 
-    @Transient
-    @OneToMany(mappedBy = "post")
-    private List<ReminderEntity> reminders;
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private ReminderEntity reminder;
+
+    @Override
+    public String toString() {
+        return user.getId().toString();
+    }
+
 
 }

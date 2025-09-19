@@ -4,51 +4,36 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import selfprojects.postAPI.Model.CreateUserRequest;
-import selfprojects.postAPI.Model.Entity.PostDTO;
 import selfprojects.postAPI.Model.Entity.PostEntity;
-import selfprojects.postAPI.Model.Entity.ReminderEntity;
 import selfprojects.postAPI.Model.Entity.UserEntity;
 import selfprojects.postAPI.MyUserDetails;
 import selfprojects.postAPI.Repository.PostRepository;
-import selfprojects.postAPI.Repository.ReminderRepository;
 import selfprojects.postAPI.Repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PostsService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ReminderRepository reminderRepository;
 
-    public PostsService(PostRepository postRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, ReminderRepository reminderRepository) {
+
+    public PostsService(PostRepository postRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.reminderRepository = reminderRepository;
     }
 
-    public List<PostDTO> getAllPosts() {
+    public List<PostEntity> getAllPosts() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails user = (MyUserDetails) auth.getPrincipal();
+
         Long userId = user.getId();
-        List<PostEntity> postsByID = postRepository.findAllByUserId(userId).orElse(null);
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow();
 
-        assert postsByID != null;
-        return postsByID.stream().map(post -> {
-            ReminderEntity reminder = reminderRepository.findByPost(post);
-
-            return new PostDTO(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    reminder != null,
-                    reminder != null && reminder.isDone(),
-                    reminder != null ? reminder.getReminderTime() : null
-            );
-        }).collect(Collectors.toList());
+        var posts = userEntity.getPosts();
+        return posts;
     }
 
     public void deletePost(Long id) {
@@ -64,18 +49,22 @@ public class PostsService {
     }
 
 
-    public PostEntity updatePost(String title, String content, Long id) {
+    public PostEntity updatePost(PostEntity post, Long id) {
+        String title = post.getTitle();
+        String content = post.getContent();
+
         PostEntity checkForPost = postRepository.findById(id).orElse(null);
         if(checkForPost == null) {
             throw new IllegalStateException("Post with this ID not found!");
         }
-        if(!checkForPost.getTitle().equals(title) && title != null){
-            checkForPost.setTitle(title);
-        }
-        if(!checkForPost.getContent().equals(content) && content != null){
-            checkForPost.setContent(content);
-        }
-        return postRepository.save(checkForPost);
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails user = (MyUserDetails) auth.getPrincipal();
+        checkForPost.setUser(userRepository.findById(user.getId()).orElseThrow());
+        checkForPost.setTitle(title);
+        checkForPost.setContent(content);
+        postRepository.save(checkForPost);
+        return checkForPost;
     }
 
     public PostEntity createPost(PostEntity postEntity) {

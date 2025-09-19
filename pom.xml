@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>selfProjects</groupId>
-	<artifactId>note-api</artifactId>
+	<artifactId>post-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>note-api</name>
 	<description>note-api</description>
