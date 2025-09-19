@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import selfprojects.postAPI.Model.ApiReturn;
 import selfprojects.postAPI.Model.CreateUserRequest;
-import selfprojects.postAPI.Model.Entity.PostDTO;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Services.PostsService;
 import java.util.List;
@@ -19,7 +18,7 @@ public class PostsController {
     }
 
     @GetMapping("/posts")
-    public List<PostDTO> getAllPosts(){
+    public List<PostEntity> getAllPosts(){
         return postsService.getAllPosts();
     }
 
@@ -38,7 +37,7 @@ public class PostsController {
     public PostEntity updatePost(
             @RequestBody PostEntity postEntity,
             @PathVariable(name = "id") Long id){
-        return postsService.updatePost(postEntity.getTitle(), postEntity.getContent(), id);
+        return postsService.updatePost(postEntity, id);
     }
 
     @DeleteMapping(path = "/posts/{id}")

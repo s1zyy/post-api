@@ -22,14 +22,14 @@ public class ReminderScheduler {
     }
 
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0/15 * * * * *")
     public void checkReminders() {
         LocalDateTime now = LocalDateTime.now();
         List<ReminderEntity> dueReminders = reminderRepository.findDueReminders(now);
 
         for (ReminderEntity reminder : dueReminders) {
             emailService.sendReminder(reminder);
-            reminder.setDone(true);
+            reminder.setCompleted(true);
             reminderRepository.save(reminder);
         }
     }

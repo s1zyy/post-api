@@ -37,13 +37,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserDetails userDetails = myUserDetailsService.loadUserById(Long.valueOf(userID));
 
 
-                System.out.print("Before validating");
+
                 if(jwtUtil.validateToken(jwt)) {
-                    System.out.print("Inside validating");
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-                System.out.print("After validating");
+
             }
         }
         filterChain.doFilter(request, response);

@@ -21,7 +21,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(reminder.getPost().getUser().getEmail());
             message.setSubject("Your Reminder");
-            message.setText(reminder.getMessage());
+            message.setText("You have a reminder for: " + reminder.getPost().getTitle());
 
             javaMailSender.send(message);
             System.out.println("Reminder sent to: " + reminder.getPost().getUser().getEmail());
