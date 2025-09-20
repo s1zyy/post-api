@@ -25,4 +25,10 @@ public class ReminderService {
 
 
     }
+
+    public ReminderEntity updateReminder(PostEntity postEntity) {
+        ReminderEntity reminder = reminderRepository.findByPostId(postEntity.getId());
+        reminder.setReminderTime(postEntity.getReminder().getReminderTime());
+        return reminderRepository.save(reminder);
+    }
 }
