@@ -57,4 +57,8 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public UserEntity getUserEntity(){
+        return userEntity;
+    }
 }

@@ -5,6 +5,7 @@
     import jakarta.persistence.*;
     import lombok.Data;
 
+    import java.time.LocalDateTime;
     import java.util.List;
 
     @Table(name = "users")
@@ -15,6 +16,10 @@
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
+
+        private String username;
+
+        private LocalDateTime birthDate;
 
         private String email;
 
@@ -27,10 +32,6 @@
         @OrderBy("id ASC")
         private List<PostEntity> posts;
 
-//        @Override
-//        public String toString() {
-//            return id.toString();
-//        }
 
 
 

@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD birth_date TIMESTAMP WITHOUT TIME ZONE;
