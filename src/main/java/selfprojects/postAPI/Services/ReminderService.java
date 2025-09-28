@@ -3,16 +3,19 @@ package selfprojects.postAPI.Services;
 import org.springframework.stereotype.Service;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
+import selfprojects.postAPI.Repository.PostRepository;
 import selfprojects.postAPI.Repository.ReminderRepository;
 
 @Service
 public class ReminderService {
 
     private final ReminderRepository reminderRepository;
+    private final PostRepository postRepository;
 
-    public ReminderService(ReminderRepository reminderRepository) {
+    public ReminderService(ReminderRepository reminderRepository, PostRepository postRepository) {
         this.reminderRepository = reminderRepository;
 
+        this.postRepository = postRepository;
     }
 
     public ReminderEntity saveReminder(PostEntity postEntity) {
@@ -30,5 +33,20 @@ public class ReminderService {
         ReminderEntity reminder = reminderRepository.findByPostId(postEntity.getId());
         reminder.setReminderTime(postEntity.getReminder().getReminderTime());
         return reminderRepository.save(reminder);
+    }
+
+    public PostEntity deleteReminder(PostEntity postEntity) {
+        ReminderEntity reminder = reminderRepository.findByPostId(postEntity.getId());
+        if (reminder == null) {
+            throw new IllegalStateException("Reminder not found!");
+        }
+
+        postEntity.setReminder(null);
+        postRepository.save(postEntity);
+        reminderRepository.delete(reminder);
+
+        postEntity.setReminder(null);
+
+        return postEntity;
     }
 }

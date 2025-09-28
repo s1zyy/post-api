@@ -4,14 +4,16 @@ package selfprojects.postAPI.Model.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "reminders")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReminderEntity {
 
     @Id

@@ -1,7 +1,7 @@
 package selfprojects.postAPI.Model.Entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,7 +38,7 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id",
     referencedColumnName = "id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"posts"})
     private UserEntity user;
 
 

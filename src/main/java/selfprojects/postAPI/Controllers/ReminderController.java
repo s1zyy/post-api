@@ -26,4 +26,11 @@ public class ReminderController {
     {
         return reminderService.updateReminder(postEntity);
     }
+
+    @DeleteMapping("/reminder/{id}")
+    public PostEntity deleteReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
+    {
+        reminderService.deleteReminder(postEntity);
+        return postEntity;
+    }
 }
