@@ -1,9 +1,6 @@
 package selfprojects.postAPI.Controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import selfprojects.postAPI.Model.ApiReturn;
-import selfprojects.postAPI.Model.CreateUserRequest;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Services.PostsService;
 import java.util.List;
@@ -46,14 +43,5 @@ public class PostsController {
     }
 
 
-    @PostMapping("/users")
-    public ApiReturn createUser(@Valid @RequestBody CreateUserRequest userRequest){
-        boolean check = postsService.createUser(userRequest);
 
-
-        if(!check){
-            return new ApiReturn("User already exists!");
-        }
-        return new ApiReturn("User created successfully!");
-    }
 }

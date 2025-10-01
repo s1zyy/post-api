@@ -42,7 +42,7 @@ public class PostEntity {
     private UserEntity user;
 
 
-    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private ReminderEntity reminder;
 

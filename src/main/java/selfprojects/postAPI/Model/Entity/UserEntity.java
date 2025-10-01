@@ -25,7 +25,7 @@
 
         private String role;
 
-        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
         @OrderBy("id ASC")
         private List<PostEntity> posts;
 

@@ -1,9 +1,7 @@
 package selfprojects.postAPI.Services;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import selfprojects.postAPI.Model.CreateUserRequest;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.UserEntity;
 import selfprojects.postAPI.MyUserDetails;
@@ -16,13 +14,12 @@ import java.util.Optional;
 public class PostsService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
-    public PostsService(PostRepository postRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public PostsService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     public List<PostEntity> getAllPosts() {
@@ -32,8 +29,7 @@ public class PostsService {
         Long userId = user.getId();
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
 
-        var posts = userEntity.getPosts();
-        return posts;
+        return userEntity.getPosts();
     }
 
     public void deletePost(Long id) {
@@ -82,21 +78,5 @@ public class PostsService {
 
     }
 
-    public boolean createUser(CreateUserRequest userRequest){
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(userRequest.getEmail());
-        userEntity.setPassword(userRequest.getPassword());
-        userEntity.setRole("ROLE_USER");
-
-        Optional<UserEntity> checkForUser = userRepository.findByEmail(userEntity.getEmail());
-        if(checkForUser.isPresent()){
-            return false;
-        }
-
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        userRepository.save(userEntity);
-        return true;
-    }
 
 }

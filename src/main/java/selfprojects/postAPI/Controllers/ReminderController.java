@@ -7,7 +7,7 @@ import selfprojects.postAPI.Model.Entity.ReminderEntity;
 import selfprojects.postAPI.Services.ReminderService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/reminder")
 public class ReminderController {
 
     private final ReminderService reminderService;
@@ -16,18 +16,18 @@ public class ReminderController {
         this.reminderService = reminderService;
     }
 
-    @PostMapping("/reminder")
+    @PostMapping
     public ReminderEntity addReminder(@RequestBody PostEntity postEntity) {
         return reminderService.saveReminder(postEntity);
     }
 
-    @PutMapping("/reminder/{id}")
+    @PutMapping("/{id}")
     public ReminderEntity updateReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
     {
         return reminderService.updateReminder(postEntity);
     }
 
-    @DeleteMapping("/reminder/{id}")
+    @DeleteMapping("/{id}")
     public PostEntity deleteReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
     {
         reminderService.deleteReminder(postEntity);
