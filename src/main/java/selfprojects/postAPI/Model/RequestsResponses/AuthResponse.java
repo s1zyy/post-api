@@ -1,4 +1,4 @@
-package selfprojects.postAPI.Model;
+package selfprojects.postAPI.Model.RequestsResponses;
 
 import selfprojects.postAPI.Model.Entity.UserEntity;
 

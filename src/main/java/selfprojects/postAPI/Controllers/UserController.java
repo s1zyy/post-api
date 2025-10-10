@@ -2,11 +2,9 @@ package selfprojects.postAPI.Controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import selfprojects.postAPI.Model.ApiReturn;
-import selfprojects.postAPI.Model.ChangeNameRequest;
-import selfprojects.postAPI.Model.CreateUserRequest;
 import selfprojects.postAPI.Model.Entity.ChangeBirthdayRequest;
 import selfprojects.postAPI.Model.Entity.UserEntity;
+import selfprojects.postAPI.Model.RequestsResponses.*;
 import selfprojects.postAPI.Services.UserService;
 
 @RestController
@@ -39,5 +37,20 @@ public class UserController {
             return new ApiReturn("User already exists!");
         }
         return new ApiReturn("User created successfully!");
+    }
+
+    @PostMapping("/reset-password/request")
+    public TrueFalseResponse sendPasswordRequest(@RequestBody PasswordRequestEmail requestEmail) {
+        return userService.sendPasswordRequest(requestEmail.email());
+    }
+
+    @PostMapping("/reset-password/confirm")
+    public TrueFalseResponse checkPasswordCode(@RequestBody ConfirmCodeRequest confirmCodeRequest) {
+        return userService.confirmCodeRequest(confirmCodeRequest);
+    }
+
+    @PostMapping("/reset-password/update")
+    public AuthResponse updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        return userService.updatePassword(updatePasswordRequest);
     }
 }

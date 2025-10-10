@@ -1,4 +1,4 @@
-package selfprojects.postAPI.Model;
+package selfprojects.postAPI.Model.RequestsResponses;
 
 public record AuthRequest(String username, String password) {
 }

@@ -1,6 +1,5 @@
 package selfprojects.postAPI.Configs;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-
     private final JwtUtil jwtUtil;
     private final MyUserDetailsService myUserDetailsService;
 
@@ -35,8 +33,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if(userID != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = myUserDetailsService.loadUserById(Long.valueOf(userID));
-
-
 
                 if(jwtUtil.validateToken(jwt)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
