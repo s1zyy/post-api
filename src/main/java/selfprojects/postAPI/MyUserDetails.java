@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import selfprojects.postAPI.Model.Entity.UserEntity;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 

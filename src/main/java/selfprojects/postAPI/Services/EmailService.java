@@ -1,6 +1,5 @@
 package selfprojects.postAPI.Services;
 
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

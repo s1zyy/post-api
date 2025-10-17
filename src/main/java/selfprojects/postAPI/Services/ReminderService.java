@@ -1,6 +1,5 @@
 package selfprojects.postAPI.Services;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
