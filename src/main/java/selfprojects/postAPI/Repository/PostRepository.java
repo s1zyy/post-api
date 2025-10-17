@@ -7,6 +7,4 @@ import selfprojects.postAPI.Model.Entity.UserEntity;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<PostEntity, Long> {
-    Optional<PostEntity> findByTitleAndContentAndUser(String title, String content, UserEntity user);
-}
+public interface PostRepository extends JpaRepository<PostEntity, Long> { }
