@@ -12,15 +12,13 @@ import java.util.List;
 @Component
 public class ReminderScheduler {
 
-    private ReminderRepository reminderRepository;
-
-    private EmailService emailService;
+    private final ReminderRepository reminderRepository;
+    private final EmailService emailService;
 
     public ReminderScheduler(ReminderRepository reminderRepository, EmailService emailService) {
         this.reminderRepository = reminderRepository;
         this.emailService = emailService;
     }
-
 
     @Scheduled(cron = "0/15 * * * * *")
     public void checkReminders() {
@@ -33,5 +31,4 @@ public class ReminderScheduler {
             reminderRepository.save(reminder);
         }
     }
-
 }

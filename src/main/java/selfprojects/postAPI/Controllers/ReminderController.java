@@ -1,6 +1,5 @@
 package selfprojects.postAPI.Controllers;
 
-
 import org.springframework.web.bind.annotation.*;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
@@ -17,20 +16,15 @@ public class ReminderController {
     }
 
     @PostMapping
-    public ReminderEntity addReminder(@RequestBody PostEntity postEntity) {
-        return reminderService.saveReminder(postEntity);
-    }
+    public ReminderEntity addReminder(@RequestBody PostEntity postEntity)
+    { return reminderService.saveReminder(postEntity); }
 
     @PutMapping("/{id}")
     public ReminderEntity updateReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
-    {
-        return reminderService.updateReminder(postEntity);
-    }
+    { return reminderService.updateReminder(postEntity); }
 
     @DeleteMapping("/{id}")
     public PostEntity deleteReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
-    {
-        reminderService.deleteReminder(postEntity);
-        return postEntity;
-    }
+    { reminderService.deleteReminder(postEntity);
+        return postEntity; }
 }

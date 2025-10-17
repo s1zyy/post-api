@@ -1,12 +1,10 @@
 package selfprojects.postAPI.Model.Entity;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "reminders")
@@ -23,7 +21,6 @@ public class ReminderEntity {
     @NotNull
     private LocalDateTime reminderTime;
 
-
     @NotNull
     @Column(name = "completed")
     private boolean completed;
@@ -32,7 +29,4 @@ public class ReminderEntity {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @JsonBackReference
     private PostEntity post;
-
-
-
 }

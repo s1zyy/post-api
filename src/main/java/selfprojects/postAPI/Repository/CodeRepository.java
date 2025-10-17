@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface CodeRepository extends JpaRepository<CodeEntity, Long> {
     List<CodeEntity> findByUserId(Long userId);
-
     Long user(UserEntity user);
 }

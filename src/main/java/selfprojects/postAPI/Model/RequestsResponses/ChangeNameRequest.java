@@ -1,4 +1,3 @@
 package selfprojects.postAPI.Model.RequestsResponses;
 
-public record ChangeNameRequest(String username) {
-}
+public record ChangeNameRequest(String username) { }

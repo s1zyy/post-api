@@ -1,5 +1,6 @@
 package selfprojects.postAPI.Services;
 
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,13 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 
-
 @Service
 public class EmailService {
 
-
     private final JavaMailSender javaMailSender;
     private final CodeRepository codeRepository;
+
+    private final Random random = new Random();
 
     public EmailService(JavaMailSender javaMailSender, CodeRepository codeRepository) {
         this.javaMailSender = javaMailSender;
@@ -25,34 +26,19 @@ public class EmailService {
     }
 
     public void sendReminder(ReminderEntity reminder) {
-
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(reminder.getPost().getUser().getEmail());
-            message.setSubject("Your Reminder");
-            message.setText("You have a reminder for: " + reminder.getPost().getTitle());
-
-            javaMailSender.send(message);
-            System.out.println("Reminder sent to: " + reminder.getPost().getUser().getEmail());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error sending reminder to: " + reminder.getPost().getUser().getEmail());
-        }
+        sendEmail(reminder.getPost().getUser().getEmail(),
+                "Your Reminder",
+                "You have a reminder for: " + reminder.getPost().getTitle());
     }
 
     public void sendPasswordReset(String email, UserEntity user) {
 
         Optional<CodeEntity> checkForExistingCode = codeRepository.findByUserId(user.getId()).stream().findAny();
-        if(checkForExistingCode.isPresent()){
-            codeRepository.delete(checkForExistingCode.get());
-        }
+        checkForExistingCode.ifPresent(codeRepository::delete);
 
-        Random random = new Random();
-        int code = 100000 + random.nextInt(900000); // 6-значный код
-        String codeString = String.valueOf(code);
+        String codeString = getRandomIntToString();
 
         Date expiryDate = new Date(System.currentTimeMillis() + 1000 * 60 * 30);
-
 
         CodeEntity codeEntity = CodeEntity.builder()
                 .user(user)
@@ -60,17 +46,25 @@ public class EmailService {
                 .expiryDate(expiryDate)
                 .build();
 
+        sendEmail(email,
+                "Password Reset",
+                "Your code for resetting your password is: " + codeString);
+        codeRepository.save(codeEntity);
+    }
 
-        try {
+    public void sendEmail(String email, String subject, String text) {
+        try{
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Password Reset");
-            message.setText("Your code for resetting your password is: " + codeString);
+            message.setSubject(subject);
+            message.setText(text);
             javaMailSender.send(message);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error sending password reset to: " + email);
+            System.out.println("Error sending email to: " + email);
         }
-        codeRepository.save(codeEntity);
+    }
+    private String getRandomIntToString() {
+        return String.valueOf(100000 + random.nextInt(900000));
     }
 }

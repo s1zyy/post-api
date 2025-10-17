@@ -1,35 +1,31 @@
-    package selfprojects.postAPI.Model.Entity;
+package selfprojects.postAPI.Model.Entity;
 
-    import jakarta.persistence.*;
-    import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Data;
 
-    import java.time.LocalDateTime;
-    import java.util.List;
+import java.time.LocalDateTime;
+import java.util.List;
 
-    @Table(name = "users")
-    @Entity
-    @Data
-    public class UserEntity {
+@Table(name = "users")
+@Entity
+@Data
+public class UserEntity {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        private String username;
+    private String username;
 
-        private LocalDateTime birthDate;
+    private LocalDateTime birthDate;
 
-        private String email;
+    private String email;
 
-        private String password;
+    private String password;
 
-        private String role;
+    private String role;
 
-        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-        @OrderBy("id ASC")
-        private List<PostEntity> posts;
-
-
-
-
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<PostEntity> posts;
+}

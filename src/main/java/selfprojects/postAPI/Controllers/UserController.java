@@ -19,7 +19,6 @@ public class UserController {
 
     @PutMapping("/{id}/name")
     public UserEntity updateName(@RequestBody ChangeNameRequest changeNameRequest, @PathVariable(name = "id") Long id){
-
         return userService.updateName(changeNameRequest, id);
     }
 
@@ -31,8 +30,6 @@ public class UserController {
     @PostMapping
     public ApiReturn createUser(@Valid @RequestBody CreateUserRequest userRequest){
         boolean check = userService.createUser(userRequest);
-
-
         if(!check){
             return new ApiReturn("User already exists!");
         }

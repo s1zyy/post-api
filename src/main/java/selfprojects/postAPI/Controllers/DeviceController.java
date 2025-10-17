@@ -18,8 +18,6 @@ public class DeviceController {
 
     public DeviceController(DeviceTokenService deviceTokenService) {
         this.deviceTokenService = deviceTokenService;
-
-
     }
 
 
@@ -27,9 +25,6 @@ public class DeviceController {
     public ResponseEntity<String> registerDevice(
             @RequestBody Map<String, String> device) {
         String deviceToken = device.get("deviceToken");
-
         return deviceTokenService.sendDeviceToken(deviceToken);
-
     }
-
 }

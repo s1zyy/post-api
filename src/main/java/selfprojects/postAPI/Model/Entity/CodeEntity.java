@@ -24,8 +24,7 @@ public class CodeEntity {
     private String code;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",
-            referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"codes"})
     private UserEntity user;
 

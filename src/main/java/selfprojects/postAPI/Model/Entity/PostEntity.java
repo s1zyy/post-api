@@ -25,15 +25,15 @@ public class PostEntity {
 
     @Column(name = "title")
     private String title;
+
     @Column(name = "content")
     private String content;
 
-
     @CreatedDate
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id",
@@ -41,15 +41,8 @@ public class PostEntity {
     @JsonIgnoreProperties({"posts"})
     private UserEntity user;
 
-
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private ReminderEntity reminder;
-
-    @Override
-    public String toString() {
-        return user.getId().toString();
-    }
-
 
 }

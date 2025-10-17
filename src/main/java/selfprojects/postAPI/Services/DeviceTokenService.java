@@ -14,7 +14,6 @@ import java.util.Optional;
 @Service
 public class DeviceTokenService {
 
-
     private final DeviceTokensRepository deviceTokensRepository;
     private final UserRepository userRepository;
 
@@ -26,15 +25,11 @@ public class DeviceTokenService {
     public ResponseEntity<String> sendDeviceToken(String deviceToken) {
         MyUserDetails user = (MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        //System.out.println(user);
-
         Optional<DeviceTokens> deviceTokens = deviceTokensRepository.findByDeviceTokenAndUser_Id(deviceToken, user.getId());
-
 
         if(deviceTokens.isPresent()){
             return ResponseEntity.ok("Device token already exists");
         }
-
         DeviceTokens deviceTokenEntity = new DeviceTokens();
         deviceTokenEntity.setDeviceToken(deviceToken);
         UserEntity userEntity = userRepository.findById(user.getId()).orElse(null);
@@ -42,8 +37,5 @@ public class DeviceTokenService {
         deviceTokensRepository.save(deviceTokenEntity);
 
         return ResponseEntity.ok("Device registered successfully!");
-
-
     }
-
 }

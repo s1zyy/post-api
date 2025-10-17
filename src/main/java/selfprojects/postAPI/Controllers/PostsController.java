@@ -20,7 +20,6 @@ public class PostsController {
     }
 
     @GetMapping("/posts/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public PostEntity getPostById(@PathVariable(name = "id") Long id){
         return postsService.getPostById(id);
     }
@@ -41,7 +40,4 @@ public class PostsController {
     public void deletePost(@PathVariable(name = "id") Long id){
         postsService.deletePost(id);
     }
-
-
-
 }

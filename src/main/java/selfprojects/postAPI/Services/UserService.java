@@ -1,6 +1,7 @@
 package selfprojects.postAPI.Services;
 
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import selfprojects.postAPI.Model.Entity.CodeEntity;
@@ -9,7 +10,7 @@ import selfprojects.postAPI.Model.Entity.ChangeBirthdayRequest;
 import selfprojects.postAPI.Model.Entity.UserEntity;
 import selfprojects.postAPI.Repository.CodeRepository;
 import selfprojects.postAPI.Repository.UserRepository;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,18 +38,14 @@ public class UserService {
 
         return userRepository.save(user);
     }
-
     public boolean createUser(CreateUserRequest userRequest){
+
+        if(userRepository.findByEmail(userRequest.getEmail()).isPresent()){ return false; }
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(userRequest.getEmail());
         userEntity.setPassword(userRequest.getPassword());
         userEntity.setRole("ROLE_USER");
-
-        Optional<UserEntity> checkForUser = userRepository.findByEmail(userEntity.getEmail());
-        if(checkForUser.isPresent()){
-            return false;
-        }
 
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
@@ -69,7 +66,6 @@ public class UserService {
         if(user.isEmpty()){
             return new TrueFalseResponse(false);
         }
-        //send actual email
         emailService.sendPasswordReset(email, user.get());
 
         return new TrueFalseResponse(true);
@@ -82,20 +78,15 @@ public class UserService {
         List<CodeEntity> code =  codeRepository.findByUserId(userEntity.getId());
 
         for(CodeEntity codeEntity : code){
-            if (codeEntity == null) {
-                return new TrueFalseResponse(false);
-            } else if (!codeEntity.getCode().equals(confirmCodeRequest.code())) {
-                return new TrueFalseResponse(false);
-            } else if (codeEntity.getExpiryDate().before(new java.util.Date())) {
-                codeRepository.delete(codeEntity);
-                return new TrueFalseResponse(false);
-            } else if (codeEntity.getCode().equals(confirmCodeRequest.code()) && codeEntity.getExpiryDate().after(new java.util.Date())) {
+            if (codeEntity.getCode().equals(confirmCodeRequest.code()) && codeEntity.getExpiryDate().after(new Date())) {
                 codeRepository.delete(codeEntity);
                 return new TrueFalseResponse(true);
+            } else if (codeEntity.getExpiryDate().before(new Date())) {
+                codeRepository.delete(codeEntity);
             }
         }
 
-      return new TrueFalseResponse(false);
+        return new TrueFalseResponse(false);
     }
 
     public AuthResponse updatePassword(UpdatePasswordRequest updatePasswordRequest){

@@ -5,14 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReminderRepository extends JpaRepository<ReminderEntity, Long> {
     @Query("SELECT r FROM ReminderEntity r WHERE r.completed = false AND r.reminderTime <= :now")
     List<ReminderEntity> findDueReminders(@Param("now") LocalDateTime now);
-
-    ReminderEntity findByPostId(Long id);
+    Optional<ReminderEntity> findByPostId(Long id);
 }
