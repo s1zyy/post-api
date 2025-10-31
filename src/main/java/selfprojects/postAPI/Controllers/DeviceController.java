@@ -24,7 +24,6 @@ public class DeviceController {
     @PostMapping("/register")
     public ResponseEntity<String> registerDevice(
             @RequestBody Map<String, String> device) {
-        String deviceToken = device.get("deviceToken");
-        return deviceTokenService.sendDeviceToken(deviceToken);
+        return deviceTokenService.sendDeviceToken(device);
     }
 }

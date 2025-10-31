@@ -1,8 +1,10 @@
 package selfprojects.postAPI.Controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
+import selfprojects.postAPI.Model.RequestsResponses.ReminderRequest;
 import selfprojects.postAPI.Services.ReminderService;
 
 @RestController
@@ -16,15 +18,19 @@ public class ReminderController {
     }
 
     @PostMapping
-    public ReminderEntity addReminder(@RequestBody PostEntity postEntity)
-    { return reminderService.saveReminder(postEntity); }
+    public ResponseEntity<ReminderEntity> addReminder(@RequestBody ReminderRequest reminderRequest) {
+        ReminderEntity reminder = reminderService.saveReminder(reminderRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reminder);
+    }
 
     @PutMapping("/{id}")
-    public ReminderEntity updateReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
-    { return reminderService.updateReminder(postEntity); }
+    public ReminderEntity updateReminder(@RequestBody ReminderEntity reminderForUpdate, @PathVariable(name = "id") Long id)
+    { return reminderService.updateReminder(reminderForUpdate); }
 
     @DeleteMapping("/{id}")
-    public PostEntity deleteReminder(@RequestBody PostEntity postEntity, @PathVariable(name = "id") Long id)
+    public ResponseEntity<Void> deleteReminder(@PathVariable(name = "id") Long id)
     {
-        return reminderService.deleteReminder(postEntity); }
+        reminderService.deleteReminder(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -3,6 +3,8 @@ package selfprojects.postAPI.Services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import selfprojects.postAPI.ExceptionHandlers.Exceptions.UserIsPresentException;
+import selfprojects.postAPI.ExceptionHandlers.Exceptions.UserNotFoundException;
 import selfprojects.postAPI.Model.Entity.CodeEntity;
 import selfprojects.postAPI.Model.RequestsResponses.*;
 import selfprojects.postAPI.Model.Entity.ChangeBirthdayRequest;
@@ -31,30 +33,27 @@ public class UserService {
     }
 
     public UserEntity updateName(ChangeNameRequest changeNameRequest, Long userId) {
-        UserEntity user = userRepository.findById(userId).orElseThrow();
+        UserEntity user = findById(userId);
 
         user.setUsername(changeNameRequest.username());
 
         return userRepository.save(user);
     }
-    public boolean createUser(CreateUserRequest userRequest){
+    public void createUser(CreateUserRequest userRequest){
 
-        if(userRepository.findByEmail(userRequest.getEmail()).isPresent()){ return false; }
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(userRequest.getEmail());
-        userEntity.setPassword(userRequest.getPassword());
-        userEntity.setRole("ROLE_USER");
-
-        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        if(userRepository.findByEmail(userRequest.getEmail()).isPresent()){ throw new UserIsPresentException("User with this email already exists");
+        }
+        UserEntity userEntity = UserEntity.builder()
+                .email(userRequest.getEmail())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
+                .role("ROLE_USER")
+                .build();
         userRepository.save(userEntity);
-        return true;
     }
 
     public UserEntity updateBirthDate(ChangeBirthdayRequest request, Long id) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow();
-
+        UserEntity user = findById(id);
         user.setBirthDate(request.birthDate());
         return userRepository.save(user);
     }
@@ -72,7 +71,7 @@ public class UserService {
     }
 
     public TrueFalseResponse confirmCodeRequest(ConfirmCodeRequest confirmCodeRequest) {
-        UserEntity userEntity = userRepository.findByEmail(confirmCodeRequest.email()).orElseThrow();
+        UserEntity userEntity = findByEmail(confirmCodeRequest.email());
 
         List<CodeEntity> code =  codeRepository.findByUserId(userEntity.getId());
 
@@ -84,18 +83,25 @@ public class UserService {
                 codeRepository.delete(codeEntity);
             }
         }
-
         return new TrueFalseResponse(false);
     }
 
     public AuthResponse updatePassword(UpdatePasswordRequest updatePasswordRequest){
 
-        UserEntity userEntity = userRepository.findByEmail(updatePasswordRequest.email()).orElseThrow();
+        UserEntity userEntity = findByEmail(updatePasswordRequest.email());
         userEntity.setPassword(passwordEncoder.encode(updatePasswordRequest.password()));
         userRepository.save(userEntity);
         AuthRequest authRequest = new AuthRequest(updatePasswordRequest.email(), updatePasswordRequest.password());
         return authService.login(authRequest);
 
 
+    }
+
+
+    public UserEntity findById(Long id){
+        return userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User with this ID not found"));
+    }
+    public UserEntity findByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("User with this email not found"));
     }
 }

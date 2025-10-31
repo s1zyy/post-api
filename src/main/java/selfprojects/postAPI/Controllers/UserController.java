@@ -1,6 +1,7 @@
 package selfprojects.postAPI.Controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import selfprojects.postAPI.Model.Entity.ChangeBirthdayRequest;
 import selfprojects.postAPI.Model.Entity.UserEntity;
@@ -28,12 +29,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ApiReturn createUser(@Valid @RequestBody CreateUserRequest userRequest){
-        boolean check = userService.createUser(userRequest);
-        if(!check){
-            return new ApiReturn("User already exists!");
-        }
-        return new ApiReturn("User created successfully!");
+    public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequest userRequest){
+        userService.createUser(userRequest);
+        return ResponseEntity.status(201).build();
     }
 
     @PostMapping("/reset-password/request")

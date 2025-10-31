@@ -1,8 +1,10 @@
 package selfprojects.postAPI.Services;
 
 import org.springframework.stereotype.Service;
+import selfprojects.postAPI.ExceptionHandlers.Exceptions.ReminderNotFound;
 import selfprojects.postAPI.Model.Entity.PostEntity;
 import selfprojects.postAPI.Model.Entity.ReminderEntity;
+import selfprojects.postAPI.Model.RequestsResponses.ReminderRequest;
 import selfprojects.postAPI.Repository.PostRepository;
 import selfprojects.postAPI.Repository.ReminderRepository;
 
@@ -17,27 +19,32 @@ public class ReminderService {
         this.postRepository = postRepository;
     }
 
-    public ReminderEntity saveReminder(PostEntity postEntity) {
-        ReminderEntity reminder = postEntity.getReminder();
+    public ReminderEntity saveReminder(ReminderRequest reminderRequest) {
+        PostEntity postEntity = postRepository.findById(reminderRequest.postId()).orElseThrow(
+                ()-> new ReminderNotFound("Post with id " + reminderRequest.postId() + " not found"));
+        ReminderEntity reminder = ReminderEntity.builder()
+                .completed(false)
+                .reminderTime(reminderRequest.reminderTime())
+                .build();
         reminder.setPost(postEntity);
         reminderRepository.save(reminder);
         return reminder;
     }
 
-    public ReminderEntity updateReminder(PostEntity postEntity) {
-        ReminderEntity reminder = reminderRepository.findByPostId(postEntity.getId())
-                .orElseThrow(()-> new IllegalStateException("Reminder not found!"));
-        reminder.setReminderTime(postEntity.getReminder().getReminderTime());
+    public ReminderEntity updateReminder(ReminderEntity reminderForUpdate) {
+        ReminderEntity reminder = getReminderById(reminderForUpdate.getId());
+        reminder.setReminderTime(reminderForUpdate.getReminderTime());
         return reminderRepository.save(reminder);
     }
 
-    public PostEntity deleteReminder(PostEntity postEntity) {
-        ReminderEntity reminder = reminderRepository.findByPostId(postEntity.getId())
-                .orElseThrow(()-> new IllegalStateException("Reminder not found!"));
+    public void deleteReminder(Long id) {
+        ReminderEntity reminder = getReminderById(id);
+        PostEntity postEntity = reminder.getPost();
         postEntity.setReminder(null);
         postRepository.save(postEntity);
-        reminderRepository.delete(reminder);
-        postEntity.setReminder(null);
-        return postEntity;
+    }
+
+    public ReminderEntity getReminderById(Long id){
+        return reminderRepository.findById(id).orElseThrow(()-> new ReminderNotFound("Reminder with id " + id + " not found"));
     }
 }

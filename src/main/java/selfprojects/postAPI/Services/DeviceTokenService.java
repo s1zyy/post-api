@@ -9,6 +9,7 @@ import selfprojects.postAPI.MyUserDetails;
 import selfprojects.postAPI.Repository.DeviceTokensRepository;
 import selfprojects.postAPI.Repository.UserRepository;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,8 @@ public class DeviceTokenService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<String> sendDeviceToken(String deviceToken) {
+    public ResponseEntity<String> sendDeviceToken(Map<String, String> device) {
+        String deviceToken = device.get("deviceToken");
         MyUserDetails user = (MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Optional<DeviceTokens> deviceTokens = deviceTokensRepository.findByDeviceTokenAndUser_Id(deviceToken, user.getId());
